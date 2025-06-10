@@ -261,7 +261,7 @@ export default {
         this.pageSize
       ).then((res) => {
         this.totalCount = res.data.data.total;
-        this.tableData = res.data.data.rows;
+        this.tableData = res.data.data.records;
       });
     },
 
