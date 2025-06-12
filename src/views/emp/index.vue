@@ -36,8 +36,6 @@
       </el-form-item>
     </el-form>
 
-
-
     <!--按钮-->
     <el-row>
       <el-button type="danger" size="medium" @click="deleteByIds">- 批量删除</el-button>
@@ -148,7 +146,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="日职日期">
+        <el-table-column align="center" label="入职日期">
           <template slot-scope="scope">
             {{ scope.row.entrydate }}
           </template>
@@ -185,7 +183,7 @@
 <script>
 import { page, add, update, deleteById, selectById } from "@/api/emp.js";
 import { findAll } from "@/api/dept.js";
-import { getToken } from '@/utils/auth';
+import { getToken } from "@/utils/auth";
 
 export default {
   data() {

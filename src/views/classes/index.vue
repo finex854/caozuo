@@ -1,14 +1,31 @@
 <template>
+  
   <div style="margin-top: 20px; margin: 50px; margin-right: 100px">
+    <!-- 搜索表单 -->
+    <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+      <el-form-item label="学院名称">
+        <el-input v-model="searchForm.collegeName" placeholder="请输入学院名称"></el-input>
+      </el-form-item>
+      <el-form-item label="专业名称">
+        <el-input v-model="searchForm.majorName" placeholder="请输入专业名称"></el-input>
+      </el-form-item>
+      <el-form-item label="班级名称">
+        <el-input v-model="searchForm.clazzName" placeholder="请输入班级名称"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="info" @click="clear">清空</el-button>
+      </el-form-item>
+    </el-form>
+    
     <!-- 按钮 -->
-
     <el-row>
       <el-button
-        style="float: right"
+        style="float: left"
         type="primary"
         @click="dialogFormVisible = true; classes={}"
-        >+ 新增班级</el-button
-      >
+        >+ 新增班级</el-button>
+        <el-button style="float:left ;" type="danger" @click="deleteByIds">- 批量删除</el-button>
     </el-row>
     <br>
     <!-- 数据表格 -->
@@ -20,9 +37,13 @@
         tooltip-effect="dark"
         style="width: 100%"
         border
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column type="index" width="100" label="序号" header-align="center" align="center"> </el-table-column>
-        <el-table-column prop="name" label="班级名称" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="collegeName" label="学院名称" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="majorName" label="专业名称" header-align="center" align="center"></el-table-column>
+        <el-table-column prop="clazzName" label="班级名称" header-align="center" align="center"></el-table-column>
         <el-table-column label="最后操作时间" header-align="center" align="center">
           <template slot-scope="scope">
               {{scope.row.updateTime ? scope.row.updateTime.replace('T',' '):''}}
@@ -51,12 +72,30 @@
       </el-table>
     </template>
 
+    <!-- 分页工具条 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :background="background"
+      :current-page="currentPage"
+      :page-sizes="[5, 10, 15, 20]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totalCount">
+    </el-pagination>
+
     <!-- 新建对话框 -->
 
     <el-dialog title="保存班级" :visible.sync="dialogFormVisible" >
       <el-form :model="classes">
+        <el-form-item label="学院名称" :label-width="formLabelWidth">
+          <el-input v-model="classes.collegeName" placeholder="请输入学院名称" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="专业名称" :label-width="formLabelWidth">
+          <el-input v-model="classes.majorName" placeholder="请输入专业名称" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="班级名称" :label-width="formLabelWidth">
-          <el-input v-model="classes.name"  placeholder="请输入班级名称" autocomplete="off"></el-input>
+          <el-input v-model="classes.clazzName" placeholder="请输入班级名称" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
 
@@ -69,7 +108,7 @@
 </template>
 
 <script>
-import { findAll, add, update, deleteById, selectById } from "@/api/classes.js";
+import { page, add, update, deleteById, selectById } from "@/api/classes.js";
 
 export default {
   data() {
@@ -77,13 +116,56 @@ export default {
       formLabelWidth: "120px",
       dialogFormVisible: false, //控制对话框是否可见
       classes: {
-        name: "",
+        clazzName: "",
+        collegeName: "",
+        majorName: ""
       },
+      // 被选中的id数组
+      selectedIds: [],
+      // 复选框选中数据集合
+      multipleSelection: [],
       tableData: [],
+      // 分页相关数据
+      background: true,
+      pageSize: 5,
+      totalCount: 0,
+      currentPage: 1,
+      // 搜索表单数据
+      searchForm: {
+        collegeName: "",
+        majorName: "",
+        clazzName: ""
+      }
     };
   },
 
   methods: {
+    // 查询方法
+    onSubmit() {
+      this.currentPage = 1;
+      this.page();
+    },
+
+    // 清空搜索条件
+    clear() {
+      this.searchForm = {
+        collegeName: "",
+        majorName: "",
+        clazzName: ""
+      };
+      this.page();
+    },
+
+    // 分页方法
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.page();
+    },
+
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.page();
+    },
 
     //删除班级
     deleteById(id) {
@@ -102,7 +184,7 @@ export default {
 	        	this.$message.error(result.data.msg);
 	        }
             //重新查询数据
-            this.init();
+            this.page();
           });
         }).catch(() => {
           this.$message({
@@ -110,6 +192,34 @@ export default {
             message: "已取消删除",
           });
         });
+    },
+
+    // 批量删除班级信息
+    deleteByIds() {
+      if (this.multipleSelection.length === 0) {
+        this.$message.warning('请选择要删除的数据');
+        return;
+      }
+      // 弹出确认提示框
+      this.$confirm("此操作将删除选中的数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+          // 获取选中数据的id数组，并转换为字符串
+          const ids = this.multipleSelection.map(item => String(item.id));
+          // 发送AJAX请求
+          deleteById(ids).then((resp) => {
+            if (resp.data.code == "1") {
+              this.$message.success("删除成功");
+              this.page();
+            } else {
+              this.$message.error(resp.data.msg);
+            }
+          });
+      }).catch(() => {
+          this.$message.info("已取消删除");
+      });
     },
 
     //根据ID查询班级 -- 回显
@@ -133,7 +243,7 @@ export default {
           //修改成功
           this.$message.success("恭喜你，保存成功");
           //重新查询数据
-          this.init();
+          this.page();
         } else {
           this.$message.error(result.data.msg);
         }
@@ -142,22 +252,38 @@ export default {
       this.dialogFormVisible = false;
 
       // 清空模型数据
-      this.classes = {};
+      this.classes = {
+        clazzName: "",
+        collegeName: "",
+        majorName: ""
+      };
     },
 
-    //初始化 - 查询全部
-    init() {
-      findAll().then((result) => {
-        console.log(result);
+    //分页查询
+    page() {
+      page(
+        this.searchForm.collegeName,
+        this.searchForm.majorName,
+        this.searchForm.clazzName,
+        this.currentPage,
+        this.pageSize
+      ).then((result) => {
         if (result.data.code == 1) {
-          this.tableData = result.data.data;
+          this.totalCount = result.data.data.total;
+          this.tableData = result.data.data.rows;
         }
       });
     },
+
+    // 复选框选中后执行的方法
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    }
   },
+
   mounted() {
     //当页面加载完成后自动执行。
-    this.init();
+    this.page();
   },
 };
 </script>

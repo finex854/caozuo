@@ -36,3 +36,10 @@ export function selectById(id) {
     method: 'get'
   })
 }
+
+export function page(collegeName, majorName, className, page, pageSize) {
+  return request({
+    url: '/classes?collegeName=' + collegeName + '&majorName=' + majorName + '&className=' + className + '&page=' + page + '&pageSize=' + pageSize,
+    method: 'get'
+  })
+}
