@@ -7,7 +7,7 @@
           <el-option
             v-for="item in classesList"
             :key="item.id"
-            :label="item.name"
+            :label="item.clazzName"
             :value="item.id">
           </el-option>
         </el-select>
@@ -119,7 +119,7 @@
             <el-option
               v-for="item in classesList"
               :key="item.id"
-              :label="item.name"
+              :label="item.clazzName"
               :value="item.id">
             </el-option>
           </el-select>
