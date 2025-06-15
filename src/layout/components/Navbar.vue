@@ -50,8 +50,17 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      removeToken();
-      this.$router.push('/login')
+      try {
+        await this.$confirm('确认退出登录吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        removeToken()
+        this.$router.push('/login')
+      } catch (error) {
+        console.log('取消退出')
+      }
     }
   }
 }

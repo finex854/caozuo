@@ -3,17 +3,14 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">智行企业组织管理平台</h3>
+        <h3 class="title">企业组织管理平台登录系统</h3>
       </div>
 
       <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -22,15 +19,12 @@
       </el-form-item>
 
       <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
         <el-input
           :key="passwordType"
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -41,7 +35,14 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+
+      <div class="tips">
+        <span>还没有账号？</span>
+        <router-link to="/register/emp">员工注册</router-link>
+        <span>或</span>
+        <router-link to="/register/student">学生注册</router-link>
+      </div>
 
     </el-form>
   </div>
@@ -76,8 +77,8 @@ export default {
     //数据模型
     return {
       loginForm: {
-        username: 'admin',
-        password: '123456'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -104,23 +105,26 @@ export default {
 
     //登录方法
     handleLogin() {
-
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-
-          //调用登录后端接口
-          login(this.loginForm).then((result) => {
-            console.log(result)
-            if (result.data.code == 1) {
-              setToken(result.data.data);
-              console.log('login success');
-              this.$router.push('/');
+          console.log('Login Form:', this.loginForm)
+          login(this.loginForm).then(response => {
+            console.log('Login Response:', response)
+            const res = response.data
+            if (res.code === 1) {
+              setToken(res.data.token)
+              this.$message.success('登录成功')
+              this.$router.push({ path: this.redirect || '/' })
             } else {
-              this.$message.error(result.data.msg);
-              this.loading = false
+              this.$message.error(res.message || '登录失败')
             }
-          });
+            this.loading = false
+          }).catch(error => {
+            console.log('Login Error:', error)
+            this.$message.error('登录失败，请重试')
+            this.loading = false
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -131,114 +135,177 @@ export default {
 }
 </script>
 
-<style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+<style lang="scss" scoped>
+$bg: #1a1a1a;
+$primary: #409EFF;
+$success: #67C23A;
+$warning: #E6A23C;
+$danger: #F56C6C;
+$info: #909399;
+$text-primary: #303133;
+$text-regular: #606266;
+$text-secondary: #909399;
+$border-color: #DCDFE6;
+$light-gray: #f5f7fa;
 
-$bg:#283443;
-$light_gray:#fff;
-$cursor: #fff;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
-    color: $cursor;
-  }
-}
-
-/* reset element-ui css */
 .login-container {
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d3a4b 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
+  .login-form {
+    width: 480px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
 
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .title-container {
+    text-align: center;
+    margin-bottom: 40px;
+
+    .title {
+      font-size: 28px;
+      color: $text-primary;
+      font-weight: 600;
+      margin: 0;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: $primary;
+        border-radius: 2px;
       }
     }
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
-
-.login-container {
-  min-height: 100%;
-  width: 100%;
-  background-color: $bg;
-  overflow: hidden;
-
-  .login-form {
+    margin-bottom: 25px;
     position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
+
+    .el-form-item__label {
+      color: $text-regular;
+      font-weight: 500;
+    }
+
+    .el-input {
+      position: relative;
+
+      .el-input__inner {
+        height: 45px;
+        line-height: 45px;
+        border-radius: 8px;
+        border: 1px solid $border-color;
+        background: $light-gray;
+        color: $text-primary;
+        transition: all 0.3s ease;
+        padding-left: 45px; // 为图标留出空间
+
+        &:hover, &:focus {
+          border-color: $primary;
+          background: #fff;
+          box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
+        }
+      }
+    }
+  }
+
+  .el-button {
+    width: 100%;
+    height: 45px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    background: $primary;
+    border: none;
+    color: #fff;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+
+    &:hover {
+      background: lighten($primary, 10%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 
   .tips {
+    text-align: center;
+    margin-top: 20px;
+    color: $text-secondary;
     font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
 
-    span {
-      &:first-of-type {
-        margin-right: 16px;
+    a {
+      color: $primary;
+      text-decoration: none;
+      font-weight: 500;
+      margin: 0 5px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: lighten($primary, 10%);
+        text-decoration: underline;
       }
     }
   }
 
   .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-      font-family: '楷体';
-    }
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-secondary;
+    font-size: 18px;
+    z-index: 1;
+    pointer-events: none; // 防止图标影响输入框交互
   }
 
   .show-pwd {
     position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-secondary;
     cursor: pointer;
-    user-select: none;
+    font-size: 18px;
+    z-index: 1;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: $primary;
+    }
+  }
+
+  // 错误提示样式
+  .el-form-item__error {
+    color: $danger;
+    font-size: 12px;
+    padding-top: 4px;
   }
 }
 </style>

@@ -11,7 +11,16 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
+  {
+    path: '/register/emp',
+    component: () => import('@/views/register/emp'),
+    hidden: true
+  },
+  {
+    path: '/register/student',
+    component: () => import('@/views/register/student'),
+    hidden: true
+  },
   {
     path: '/404',
     component: () => import('@/views/404'),
@@ -114,6 +123,34 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
+
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('zcn_token')
+  // 定义不需要登录就可以访问的路由
+  const whiteList = ['/login', '/register/emp', '/register/student']
+  
+  if (whiteList.includes(to.path)) {
+    // 如果是访问白名单中的页面，直接放行
+    next()
+  } else {
+    // 如果不是访问白名单中的页面，需要验证token
+    if (token) {
+      next()
+    } else {
+      next('/login')
+    }
+  }
+})
+
+// 全局后置守卫
+router.afterEach((to, from) => {
+  const token = localStorage.getItem('zcn_token')
+  const whiteList = ['/login', '/register/emp', '/register/student']
+  if (!token && !whiteList.includes(to.path)) {
+    router.replace('/login')
+  }
+})
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {

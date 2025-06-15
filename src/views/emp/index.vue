@@ -38,21 +38,29 @@
 
     <!--按钮-->
     <el-row>
-      <el-button type="danger" size="medium" @click="deleteByIds">- 批量删除</el-button>
       <el-button type="primary" size="medium" @click="dialogVisible = true; emp = { image: ''};" >+ 新增员工</el-button>
+      <el-button type="danger" size="medium" @click="deleteByIds">- 批量删除</el-button>
     </el-row>
 
     <!--添加数据对话框表单-->
     <el-dialog ref="form" title="编辑员工" :visible.sync="dialogVisible" width="30%">
-      <el-form ref="form" :model="emp" label-width="80px" size="mini">
-        <el-form-item label="用户名">
+      <el-form ref="form" :model="emp" :rules="rules" label-width="80px" size="mini">
+        <el-form-item label="用户名" prop="username">
           <el-input v-model="emp.username"></el-input>
         </el-form-item>
-        <el-form-item label="员工姓名">
+        <el-form-item label="员工姓名" prop="name">
           <el-input v-model="emp.name"></el-input>
         </el-form-item>
 
-        <el-form-item label="性别" >
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="emp.phone" placeholder="请输入电话号码"></el-input>
+        </el-form-item>
+
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="emp.email" placeholder="请输入邮箱地址"></el-input>
+        </el-form-item>
+
+        <el-form-item label="性别" prop="gender">
           <el-select v-model="emp.gender" placeholder="请选择" style="width:100%" >
              <el-option
               v-for="item in genderList"
@@ -63,7 +71,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="头像">
+        <el-form-item label="头像" prop="image">
           <el-upload
             class="avatar-uploader"
             action="/api/upload"
@@ -78,7 +86,7 @@
           </el-upload>
         </el-form-item>
 
-        <el-form-item label="职位">
+        <el-form-item label="职位" prop="job">
           <el-select v-model="emp.job" placeholder="请选择" value-key="emp.job" style="width:100%">
             <el-option
               v-for="item in jobList"
@@ -89,7 +97,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="入职日期">
+        <el-form-item label="入职日期" prop="entrydate">
           <el-date-picker
             v-model="emp.entrydate"
             clearable
@@ -100,7 +108,7 @@
           ></el-date-picker>
         </el-form-item>
 
-        <el-form-item label="归属部门">
+        <el-form-item label="归属部门" prop="deptId">
           <el-select v-model="emp.deptId" placeholder="请选择" style="width:100%">
             <el-option
               v-for="item in deptList"
@@ -124,6 +132,8 @@
       <el-table :data="tableData" style="width: 100%" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"  align="center"></el-table-column>
         <el-table-column  prop="name"  label="姓名"  align="center"></el-table-column>
+        <el-table-column prop="phone" label="电话" align="center"></el-table-column>
+        <el-table-column prop="email" label="邮箱" align="center"></el-table-column>
         <el-table-column prop="image" label="头像" align="center">
           <template slot-scope="{ row }">
             <el-image style="width: auto; height: 40px; border: none; cursor: pointer" :src="row.image"></el-image>
@@ -204,6 +214,14 @@ export default {
       },
       emp: {
         image: "",
+        username: "",
+        name: "",
+        phone: "",
+        email: "",
+        gender: "",
+        job: "",
+        entrydate: "",
+        deptId: ""
       },
       deptList: [],
       genderList: [{id: 1,name: "男"},{id: 2,name: "女"}],
@@ -225,6 +243,37 @@ export default {
           name: "教研主管",
         }
       ],
+      // 表单验证规则
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入员工姓名', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { pattern: /^1[2-9]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+        ],
+        gender: [
+          { required: true, message: '请选择性别', trigger: 'change' }
+        ],
+        job: [
+          { required: true, message: '请选择职位', trigger: 'change' }
+        ],
+        entrydate: [
+          { required: true, message: '请选择入职日期', trigger: 'change' }
+        ],
+        deptId: [
+          { required: true, message: '请选择归属部门', trigger: 'change' }
+        ]
+      },
 
       beginTime: "",
       endTime: "",
@@ -283,23 +332,29 @@ export default {
     },
     // 添加数据
     add() {
-      let operator;
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          let operator;
+          if (this.emp.id) {
+            //修改
+            operator = update(this.emp);
+          } else {
+            operator = add(this.emp);
+          }
 
-      if (this.emp.id) {
-        //修改
-        operator = update(this.emp);
-      } else {
-        operator = add(this.emp);
-      }
-
-      operator.then((resp) => {
-        if (resp.data.code == "1") {
-          this.dialogVisible = false;
-          this.page();
-          this.$message({ message: "恭喜你，保存成功", type: "success" });
-          this.emp = { image: "" };
+          operator.then((resp) => {
+            if (resp.data.code == "1") {
+              this.dialogVisible = false;
+              this.page();
+              this.$message({ message: "恭喜你，保存成功", type: "success" });
+              this.emp = { image: "" };
+            } else {
+              this.$message.error(resp.data.msg);
+            }
+          });
         } else {
-          this.$message.error(resp.data.msg);
+          this.$message.error('请填写完整的表单信息');
+          return false;
         }
       });
     },

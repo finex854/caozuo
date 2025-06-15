@@ -93,6 +93,9 @@
     <!-- 新增/编辑对话框 -->
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="500px">
       <el-form :model="form" :rules="rules" ref="form" label-width="100px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
+        </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入学生姓名"></el-input>
         </el-form-item>
@@ -164,6 +167,7 @@ export default {
       // 表单数据
       form: {
         id: undefined,
+        username: '',
         name: '',
         gender: 1,
         age: 18,
@@ -174,6 +178,10 @@ export default {
       },
       // 表单验证规则
       rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
         name: [
           { required: true, message: '请输入学生姓名', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
