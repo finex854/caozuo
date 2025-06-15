@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import Router from '@/router'
 import { removeToken,getToken } from '@/utils/auth'
-import { Message, MessageBox } from 'element-ui'
+// import { Message, MessageBox } from 'element-ui'
 
 const service = axios.create({
   baseURL: '/api', // url = base url + request url
@@ -67,9 +68,9 @@ service.interceptors.response.use(
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
         // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
+        MessageBox.confirm('您已登出，请重新登录', '确认登出', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
@@ -84,11 +85,21 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    // 如果响应中包含错误信息，直接显示后端返回的错误信息
+    if (error.response && error.response.data && error.response.data.msg) {
+      Message({
+        message: error.response.data.msg,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    } else {
+      // 如果没有具体的错误信息，才显示默认的错误提示
+      Message({
+        message: '请求失败，请稍后重试',
+        type: 'error',
+        duration: 5 * 1000
+      })
+    }
     return Promise.reject(error)
   }
 )

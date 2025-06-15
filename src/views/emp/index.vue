@@ -1,5 +1,9 @@
 <template>
   <div class="app-container">
+    <upload-excel
+      :upload-url="uploadUrl"
+      @success="handleSuccess"
+    />
 
     <!--搜索表单-->
     <el-form :inline="true" :model="searchEmp" class="demo-form-inline">
@@ -194,8 +198,14 @@
 import { page, add, update, deleteById, selectById } from "@/api/emp.js";
 import { findAll } from "@/api/dept.js";
 import { getToken } from "@/utils/auth";
+import UploadExcel from '@/components/UploadExcel'
+import { importExcel } from '@/api/emp'
 
 export default {
+  name: 'Emp',
+  components: {
+    UploadExcel
+  },
   data() {
     return {
       background: true,
@@ -285,7 +295,16 @@ export default {
       multipleSelection: [],
       // 表格数据
       tableData: [],
-      token: {token: getToken()}
+      token: {token: getToken()},
+      uploadUrl: process.env.VUE_APP_BASE_API + '/emps/import',
+      // 上传参数
+      upload: {
+        open: false,
+        title: '导入员工数据',
+        url: process.env.VUE_APP_BASE_API + "/emps/import",
+        headers: { Authorization: "Bearer " + getToken() },
+        isUploading: false
+      },
     };
   },
 
@@ -456,6 +475,44 @@ export default {
       }
       return isJPG && isLt2M;
     },
+    handleSuccess() {
+      this.getList()
+    },
+    /** 导入按钮操作 */
+    handleImport() {
+      this.upload.title = "导入员工数据";
+      this.upload.open = true;
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.$confirm('是否确认导出所有员工数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.exportLoading = true;
+        return exportExcel();
+      }).then(response => {
+        this.download(response.msg);
+        this.exportLoading = false;
+      }).catch(() => {});
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.$refs.upload.clearFiles();
+      this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
+      this.getList();
+    },
+    // 提交上传文件
+    submitFileForm() {
+      this.$refs.upload.submit();
+    }
   },
 
 
