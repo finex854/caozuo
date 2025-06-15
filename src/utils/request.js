@@ -15,7 +15,9 @@ const whiteList = [
   '/users/emp/register',
   '/users/student/register',
   '/depts',
-  '/classes'
+  '/classes',
+  '/report/emp/job',
+  '/report/student/class'
 ]
 
 // request interceptor
