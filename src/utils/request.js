@@ -11,10 +11,11 @@ const service = axios.create({
 
 // 白名单路径，不需要token的接口
 const whiteList = [
-  '/api/users/login',
-  '/api/users/register',
-  '/api/depts',
-  '/api/classes'
+  '/users/login',
+  '/users/emp/register',
+  '/users/student/register',
+  '/depts',
+  '/classes'
 ]
 
 // request interceptor
