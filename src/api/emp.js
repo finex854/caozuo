@@ -7,6 +7,13 @@ export function page(name,gender,begin,end,page,pageSize) {
   })
 }
 
+export function findAll() {
+  return request({
+    url: '/emps',
+    method: 'get'
+  })
+}
+
 export function add(emp) {
   return request({
     url: '/emps',
@@ -15,27 +22,47 @@ export function add(emp) {
   })
 }
 
-export function update(dept) {
+export function update(emp) {
   return request({
     url: '/emps',
     method: 'put',
-    data: dept
+    data: emp
   })
 }
-
 
 export function deleteById(id) {
   return request({
-    url: '/emps/'+id,
-    method: 'delete',
+    url: '/emps/' + id,
+    method: 'delete'
   })
 }
-
 
 export function selectById(id) {
   return request({
-    url: '/emps/'+id,
-    method: 'get',
+    url: '/emps/' + id,
+    method: 'get'
   })
 }
+
+// 导出Excel
+export function exportExcel() {
+  return request({
+    url: '/emps/export',
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+// 导入Excel
+export function importExcel(data) {
+  return request({
+    url: '/emps/import',
+    method: 'post',
+    data: data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
 
