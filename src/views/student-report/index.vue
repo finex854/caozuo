@@ -1,8 +1,15 @@
 <template>
-  <div class="app-container">
+  <div class="app-container report-container">
+    <div class="chart-title">学生信息统计报表</div>
     <div class="chart-container">
-      <div id="barChart" style="width: 50%;height:500px;" />
-      <div id="pieChart" style="width: 50%;height:500px;" />
+      <div class="chart-box">
+        <div class="chart-subtitle">班级人数分布</div>
+        <div id="barChart" />
+      </div>
+      <div class="chart-box">
+        <div class="chart-subtitle">男女比例</div>
+        <div id="pieChart" />
+      </div>
     </div>
   </div>
 </template>
@@ -52,22 +59,39 @@ export default {
       // 准备数据
       const { classNames, classData } = this.chartData
       
+      // 自定义颜色
+      const colorList = [
+        '#5470c6', '#91cc75', '#fac858', '#ee6666', 
+        '#73c0de', '#3ba272', '#fc8452', '#9a60b4'
+      ]
+      
       // 绘制柱状图
       barChart.setOption({
+        backgroundColor: '#ffffff',
         title: {
           text: '各班级学生人数统计',
-          left: 'center'
+          left: 'center',
+          textStyle: {
+            fontSize: 16,
+            fontWeight: 'normal',
+            color: '#333'
+          }
         },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'shadow'
-          }
+            type: 'shadow',
+            shadowStyle: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            }
+          },
+          formatter: '{b}<br/>学生人数: {c}人'
         },
         grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
+          left: '5%',
+          right: '5%',
+          bottom: '12%',
+          top: '15%',
           containLabel: true
         },
         xAxis: {
@@ -75,31 +99,70 @@ export default {
           data: classNames || ['暂无数据'],
           axisLabel: {
             interval: 0,
-            rotate: 30
+            rotate: 30,
+            color: '#666',
+            fontSize: 12
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#999'
+            }
           }
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          name: '人数',
+          nameTextStyle: {
+            color: '#666',
+            fontSize: 12,
+            padding: [0, 30, 0, 0]
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#999'
+            }
+          },
+          axisLabel: {
+            color: '#666',
+            fontSize: 12
+          },
+          splitLine: {
+            lineStyle: {
+              type: 'dashed',
+              color: '#eee'
+            }
+          }
         },
         series: [
           {
             name: '学生人数',
             type: 'bar',
             data: classData || [],
+            barWidth: '50%',
             itemStyle: {
               color: function(params) {
-                // 为每个班级生成不同的颜色
-                const colorList = [
-                  '#5470c6', '#91cc75', '#fac858', '#ee6666', 
-                  '#73c0de', '#3ba272', '#fc8452', '#9a60b4'
-                ]
                 return colorList[params.dataIndex % colorList.length]
-              }
+              },
+              borderRadius: [4, 4, 0, 0],
+              shadowBlur: 5,
+              shadowColor: 'rgba(0, 0, 0, 0.2)'
             },
             label: {
               show: true,
-              position: 'top'
-            }
+              position: 'top',
+              formatter: '{c}人',
+              fontSize: 12,
+              fontWeight: 'bold'
+            },
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 15,
+                shadowColor: 'rgba(0, 0, 0, 0.3)'
+              }
+            },
+            animationType: 'scale',
+            animationEasing: 'elasticOut'
           }
         ]
       })
@@ -133,33 +196,74 @@ export default {
       
       // 绘制饼图
       pieChart.setOption({
+        backgroundColor: '#ffffff',
         title: {
           text: '学生性别比例统计',
-          left: 'center'
+          left: 'center',
+          textStyle: {
+            fontSize: 16,
+            fontWeight: 'normal',
+            color: '#333'
+          }
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
+          formatter: '{b}: {c}人 ({d}%)'
         },
         legend: {
-          orient: 'vertical',
-          left: 'left',
-          data: ['男生', '女生']
+          orient: 'horizontal',
+          bottom: '5%',
+          left: 'center',
+          itemGap: 20,
+          data: ['男生', '女生'],
+          textStyle: {
+            color: '#666',
+            fontSize: 14
+          },
+          icon: 'circle'
         },
+        color: ['#5470c6', '#ee6666'],
         series: [
           {
             name: '性别比例',
             type: 'pie',
-            radius: '60%',
+            radius: ['40%', '70%'], // 环形图
             center: ['50%', '50%'],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 8,
+              borderColor: '#fff',
+              borderWidth: 2,
+              shadowBlur: 10,
+              shadowColor: 'rgba(0, 0, 0, 0.2)'
+            },
+            label: {
+              show: true,
+              position: 'outside',
+              formatter: '{b}: {c}人\n{d}%',
+              fontSize: 14,
+              fontWeight: 'bold'
+            },
+            labelLine: {
+              show: true,
+              smooth: true,
+              length: 15,
+              length2: 15
+            },
             data: pieData,
             emphasis: {
               itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
+                shadowBlur: 20,
                 shadowColor: 'rgba(0, 0, 0, 0.5)'
+              },
+              label: {
+                show: true,
+                fontSize: 16,
+                fontWeight: 'bold'
               }
-            }
+            },
+            animationType: 'scale',
+            animationEasing: 'elasticOut'
           }
         ]
       })
@@ -174,9 +278,48 @@ export default {
 </script>
 
 <style scoped>
+.report-container {
+  background-color: #f5f7fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.chart-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.chart-subtitle {
+  font-size: 16px;
+  color: #555;
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
 .chart-container {
   display: flex;
   flex-direction: row;
   height: 500px;
+  gap: 20px;
+}
+
+.chart-box {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+#barChart, #pieChart {
+  flex: 1;
+  width: 100%;
 }
 </style>
