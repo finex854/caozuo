@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function page(name,gender,begin,end,page,pageSize) {
+export function page(name, gender, begin, end, page, pageSize) {
   return request({
-    url: '/emps?name='+name+'&gender='+gender+'&begin='+begin+'&end='+end+'&page='+page+'&pageSize='+pageSize,
+    url: '/emps?name=' + name + '&gender=' + gender + '&begin=' + begin + '&end=' + end + '&page=' + page + '&pageSize=' + pageSize,
     method: 'get'
   })
 }
@@ -64,5 +64,4 @@ export function importExcel(data) {
     }
   })
 }
-
 
