@@ -35,16 +35,17 @@
 
       <el-form-item label="性别" prop="gender">
         <el-select v-model="registerForm.gender" placeholder="请选择性别">
-          <el-option label="男" value="男" />
-          <el-option label="女" value="女" />
+          <el-option label="男" :value="1" />
+          <el-option label="女" :value="2" />
         </el-select>
       </el-form-item>
 
       <el-form-item label="职位" prop="job">
         <el-select v-model="registerForm.job" placeholder="请选择职位">
-          <el-option label="教师" value="教师" />
-          <el-option label="管理员" value="管理员" />
-          <el-option label="其他" value="其他" />
+          <el-option label="班主任" :value="1" />
+          <el-option label="讲师" value="2" />
+          <el-option label="学工主管" value="3" />
+          <el-option label="教研主管" value="4" />
         </el-select>
       </el-form-item>
 
