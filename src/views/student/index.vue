@@ -220,31 +220,19 @@ export default {
     // 获取学生列表
     getList() {
       this.loading = true;
-      if (this.queryParams.classId) {
-        // 按班级ID查询
-        getPageByClassId(
-          this.queryParams.classId,
-          this.pagination.currentPage,
-          this.pagination.pageSize
-        ).then(response => {
-          if (response.data.code === 1) {
-            const data = response.data.data;
-            this.tableData = data.records;
-            this.pagination.total = data.total;
-          }
-          this.loading = false;
-        });
-      } else {
-        // 查询所有
-        getPage(this.pagination.currentPage, this.pagination.pageSize).then(response => {
-          if (response.data.code === 1) {
-            const data = response.data.data;
-            this.tableData = data.records;
-            this.pagination.total = data.total;
-          }
-          this.loading = false;
-        });
-      }
+      getPage(
+        this.pagination.currentPage,
+        this.pagination.pageSize,
+        this.queryParams.name,
+        this.queryParams.classId
+      ).then(response => {
+        if (response.data.code === 1) {
+          const data = response.data.data;
+          this.tableData = data.records;
+          this.pagination.total = data.total;
+        }
+        this.loading = false;
+      });
     },
 
     // 搜索

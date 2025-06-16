@@ -9,10 +9,16 @@ export function findAll() {
 }
 
 // 分页获取学生
-export function getPage(pageNum, pageSize) {
+export function getPage(pageNum, pageSize, name, classId) {
   return request({
-    url: `/students/page?pageNum=${pageNum}&pageSize=${pageSize}`,
-    method: 'get'
+    url: `/students/page`,
+    method: 'get',
+    params: {
+      pageNum,
+      pageSize,
+      name,
+      classId
+    }
   })
 }
 
