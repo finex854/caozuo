@@ -62,9 +62,9 @@ export const constantRoutes = [
   }, {
     path: '/system',
     component: Layout,
-    redirect: '/system',
+    redirect: '/system/user',
     name: 'System',
-    meta: { title: '系统信息管理', icon: 'el-icon-s-tools' },
+    meta: { title: '系统管理', icon: 'el-icon-setting' },
     children: [
       {
         path: 'dept',
@@ -105,11 +105,18 @@ export const constantRoutes = [
     path: '/message',
     component: Layout,
     redirect: '/message',
+    meta: { title: '通知', icon: 'el-icon-s-comment' },
     children: [{
       path: 'message',
       name: 'message',
       component: () => import('@/views/message'),
       meta: { title: '通知', icon: 'el-icon-s-comment' }
+    },
+    {
+      path: 'operation-log',
+      name: 'OperationLog',
+      component: () => import('@/views/operationLog/index'),
+      meta: { title: '操作日志', icon: 'el-icon-s-order' }
     }]
   },
   // 404 page must be placed at the end !!!
