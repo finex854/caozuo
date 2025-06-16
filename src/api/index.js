@@ -1,8 +1,8 @@
-import request from '@/utils/request'
+import axios from 'axios'
 
 export function getIndexData() {
-  return request({
-    url: '/index',
+  return axios({
+    url: 'http://localhost:9528/',
     method: 'get'
   })
 }
