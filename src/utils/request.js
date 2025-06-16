@@ -18,7 +18,8 @@ const whiteList = [
   '/depts',
   '/classes',
   '/report/emp/job',
-  '/report/student/class'
+  '/report/student/class',
+  '/emps/export'  // 添加导出接口到白名单
 ]
 
 // request interceptor

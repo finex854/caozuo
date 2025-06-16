@@ -493,9 +493,25 @@ export default {
         this.exportLoading = true;
         return exportExcel();
       }).then(response => {
-        this.download(response.msg);
+        // 检查响应是否为blob类型
+        if (response instanceof Blob) {
+          console.log(res);
+          const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = '员工数据.xlsx';
+          link.click();
+          window.URL.revokeObjectURL(link.href);
+          this.$message.success('导出成功');
+        } else {
+          this.$message.error('导出失败：返回数据格式不正确');
+        }
         this.exportLoading = false;
-      }).catch(() => {});
+      }).catch(error => {
+        console.error('导出失败:', error);
+        this.exportLoading = false;
+        this.$message.error('导出失败：' + (error.message || '未知错误'));
+      });
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
