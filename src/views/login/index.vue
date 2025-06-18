@@ -55,8 +55,7 @@ import { setToken } from '@/utils/auth'
 export default {
   name: 'Login',
   data() {
-
-    //用户名校验规则
+    // 用户名校验规则
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
         callback(new Error('请输入正确的用户名'))
@@ -65,7 +64,7 @@ export default {
       }
     }
 
-    //用户名校验规则
+    // 用户名校验规则
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码长度至少为6位'))
@@ -74,7 +73,7 @@ export default {
       }
     }
 
-    //数据模型
+    // 数据模型
     return {
       loginForm: {
         username: '',
@@ -91,7 +90,7 @@ export default {
   },
 
   methods: {
-    //展示密码
+    // 展示密码
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -103,7 +102,7 @@ export default {
       })
     },
 
-    //登录方法
+    // 登录方法
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -113,7 +112,13 @@ export default {
             console.log('Login Response:', response)
             const res = response.data
             if (res.code === 1) {
+              console.log('登录返回数据:', res.data)
               setToken(res.data.token)
+              // 存储role和token到localStorage
+              localStorage.setItem('userInfo', JSON.stringify({
+                role: res.data.role,
+                token: res.data.token
+              }))
               this.$message.success('登录成功')
               this.$router.push({ path: this.redirect || '/' })
             } else {

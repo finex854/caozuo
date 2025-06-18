@@ -55,16 +55,16 @@ export default {
     initBarChart() {
       // 基于准备好的dom，初始化echarts实例
       const barChart = echarts.init(document.getElementById('barChart'))
-      
+
       // 准备数据
       const { classNames, classData } = this.chartData
-      
+
       // 自定义颜色
       const colorList = [
-        '#5470c6', '#91cc75', '#fac858', '#ee6666', 
+        '#5470c6', '#91cc75', '#fac858', '#ee6666',
         '#73c0de', '#3ba272', '#fc8452', '#9a60b4'
       ]
-      
+
       // 绘制柱状图
       barChart.setOption({
         backgroundColor: '#ffffff',
@@ -141,7 +141,7 @@ export default {
             data: classData || [],
             barWidth: '50%',
             itemStyle: {
-              color: function(params) {
+              color: function (params) {
                 return colorList[params.dataIndex % colorList.length]
               },
               borderRadius: [4, 4, 0, 0],
@@ -175,25 +175,25 @@ export default {
     initPieChart() {
       // 基于准备好的dom，初始化echarts实例
       const pieChart = echarts.init(document.getElementById('pieChart'))
-      
+
       // 准备数据
       const { genderStats } = this.chartData
-      
+
       // 计算总的男女学生数量
       let totalMale = 0
       let totalFemale = 0
-      
+
       if (genderStats && genderStats['男'] && genderStats['女']) {
         totalMale = genderStats['男'].reduce((sum, current) => sum + current, 0)
         totalFemale = genderStats['女'].reduce((sum, current) => sum + current, 0)
       }
-      
+
       // 饼图数据
       const pieData = [
         { value: totalMale, name: '男生' },
         { value: totalFemale, name: '女生' }
       ]
-      
+
       // 绘制饼图
       pieChart.setOption({
         backgroundColor: '#ffffff',
@@ -318,7 +318,8 @@ export default {
   flex-direction: column;
 }
 
-#barChart, #pieChart {
+#barChart,
+#pieChart {
   flex: 1;
   width: 100%;
 }

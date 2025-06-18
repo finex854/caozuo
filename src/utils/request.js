@@ -2,7 +2,7 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import Router from '@/router'
-import { removeToken,getToken } from '@/utils/auth'
+import { removeToken, getToken } from '@/utils/auth'
 // import { Message, MessageBox } from 'element-ui'
 
 const service = axios.create({
@@ -19,7 +19,7 @@ const whiteList = [
   '/classes',
   '/report/emp/job',
   '/report/student/class',
-  '/emps/export'  // 添加导出接口到白名单
+  '/emps/export' // 添加导出接口到白名单
 ]
 
 // request interceptor

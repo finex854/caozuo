@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!item.hidden">
+  <div v-if="!item.hidden && showByRole(item)">
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
@@ -18,6 +18,7 @@
         :is-nest="true"
         :item="child"
         :base-path="resolvePath(child.path)"
+        :role="role"
         class="nest-menu"
       />
     </el-submenu>
@@ -46,6 +47,10 @@ export default {
       default: false
     },
     basePath: {
+      type: String,
+      default: ''
+    },
+    role: {
       type: String,
       default: ''
     }
@@ -89,6 +94,10 @@ export default {
         return this.basePath
       }
       return path.resolve(this.basePath, routePath)
+    },
+    showByRole(item) {
+      if (!item.meta || !item.meta.roles) return true
+      return item.meta.roles.includes(this.role)
     }
   }
 }

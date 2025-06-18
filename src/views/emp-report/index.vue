@@ -41,13 +41,13 @@ export default {
     initChart() {
       // 基于准备好的dom，初始化echarts实例
       const myChart = echarts.init(document.getElementById('main'))
-      
+
       // 准备数据
       const { jobNames, jobData } = this.chartData
-      
+
       // 自定义颜色
       const colors = ['#5470c6', '#91cc75', '#ee6666', '#73c0de']
-      
+
       // 绘制图表
       myChart.setOption({
         backgroundColor: '#ffffff',
@@ -148,7 +148,7 @@ export default {
               }
             },
             animationType: 'scale',
-            animationDelay: function (idx) {
+            animationDelay: function(idx) {
               return idx * 100
             }
           }

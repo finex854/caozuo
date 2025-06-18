@@ -12,7 +12,7 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
+        <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" :role="role" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -26,6 +26,11 @@ import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem, Logo },
+  data() {
+    return {
+      role: ''
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar'
@@ -43,14 +48,19 @@ export default {
       return path
     },
     showLogo() {
-     
-      return true;
+      return true
     },
     variables() {
       return variables
     },
     isCollapse() {
       return !this.sidebar.opened
+    }
+  },
+  mounted() {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (userInfo && userInfo.role) {
+      this.role = userInfo.role
     }
   }
 }

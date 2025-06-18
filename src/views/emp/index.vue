@@ -2,6 +2,7 @@
   <div class="app-container">
     <upload-excel
       :upload-url="uploadUrl"
+      :on-submit="uploadExcelSubmit"
       @success="handleSuccess"
     />
 
@@ -11,12 +12,12 @@
         <el-input
           v-model="searchEmp.name"
           placeholder="请输入员工姓名"
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item label="性别">
         <el-select v-model="searchEmp.gender" placeholder="请选择">
-          <el-option label="男" value="1"></el-option>
-          <el-option label="女" value="2"></el-option>
+          <el-option label="男" value="1" />
+          <el-option label="女" value="2" />
         </el-select>
       </el-form-item>
 
@@ -31,42 +32,42 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           style="width: 400px; margin-left: 20px"
-        ></el-date-picker>
+        />
       </el-form-item>
 
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
-         <el-button type="info" @click="clear">清空</el-button>
+        <el-button type="info" @click="clear">清空</el-button>
       </el-form-item>
     </el-form>
 
     <!--按钮-->
     <el-row>
-      <el-button type="primary" size="medium" @click="dialogVisible = true; emp = { image: ''};" >+ 新增员工</el-button>
-      <el-button type="danger" size="medium" @click="deleteByIds">- 批量删除</el-button>
+      <el-button v-if="role === 'ROLE_ADMIN'" type="primary" size="medium" @click="dialogVisible = true; emp = { image: ''};">+ 新增员工</el-button>
+      <el-button v-if="role === 'ROLE_ADMIN'" type="danger" size="medium" @click="deleteByIds">- 批量删除</el-button>
     </el-row>
 
     <!--添加数据对话框表单-->
     <el-dialog ref="form" title="编辑员工" :visible.sync="dialogVisible" width="30%">
       <el-form ref="form" :model="emp" :rules="rules" label-width="80px" size="mini">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="emp.username"></el-input>
+          <el-input v-model="emp.username" />
         </el-form-item>
         <el-form-item label="员工姓名" prop="name">
-          <el-input v-model="emp.name"></el-input>
+          <el-input v-model="emp.name" />
         </el-form-item>
 
         <el-form-item label="电话" prop="phone">
-          <el-input v-model="emp.phone" placeholder="请输入电话号码"></el-input>
+          <el-input v-model="emp.phone" placeholder="请输入电话号码" />
         </el-form-item>
 
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="emp.email" placeholder="请输入邮箱地址"></el-input>
+          <el-input v-model="emp.email" placeholder="请输入邮箱地址" />
         </el-form-item>
 
         <el-form-item label="性别" prop="gender">
-          <el-select v-model="emp.gender" placeholder="请选择" style="width:100%" >
-             <el-option
+          <el-select v-model="emp.gender" placeholder="请选择" style="width:100%">
+            <el-option
               v-for="item in genderList"
               :key="item.value"
               :label="item.name"
@@ -85,8 +86,8 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="emp.image" :src="emp.image" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <img v-if="emp.image" :src="emp.image" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
 
@@ -109,7 +110,7 @@
             placeholder="选择日期"
             size="small"
             style="width:100%"
-          ></el-date-picker>
+          />
         </el-form-item>
 
         <el-form-item label="归属部门" prop="deptId">
@@ -134,29 +135,29 @@
     <!--表格-->
     <template>
       <el-table :data="tableData" style="width: 100%" border @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55"  align="center"></el-table-column>
-        <el-table-column  prop="name"  label="姓名"  align="center"></el-table-column>
-        <el-table-column prop="phone" label="电话" align="center"></el-table-column>
-        <el-table-column prop="email" label="邮箱" align="center"></el-table-column>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column prop="name" label="姓名" align="center" />
+        <el-table-column prop="phone" label="电话" align="center" />
+        <el-table-column prop="email" label="邮箱" align="center" />
         <el-table-column prop="image" label="头像" align="center">
           <template slot-scope="{ row }">
-            <el-image style="width: auto; height: 40px; border: none; cursor: pointer" :src="row.image"></el-image>
+            <el-image style="width: auto; height: 40px; border: none; cursor: pointer" :src="row.image" />
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="性别">
           <template slot-scope="scope">
             <span style="margin-right: 10px">
-            {{scope.row.gender == "1" ? "男" : "女"}}</span>
+              {{ scope.row.gender == "1" ? "男" : "女" }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="职位">
           <template slot-scope="scope">
-            <span style="margin-right: 10px" v-if="scope.row.job == 1">班主任</span>
-            <span style="margin-right: 10px" v-if="scope.row.job == 2">讲师</span>
-            <span style="margin-right: 10px" v-if="scope.row.job == 3">学工主管</span>
-            <span style="margin-right: 10px" v-if="scope.row.job == 4">教研主管</span>
+            <span v-if="scope.row.job == 1" style="margin-right: 10px">班主任</span>
+            <span v-if="scope.row.job == 2" style="margin-right: 10px">讲师</span>
+            <span v-if="scope.row.job == 3" style="margin-right: 10px">学工主管</span>
+            <span v-if="scope.row.job == 4" style="margin-right: 10px">教研主管</span>
           </template>
         </el-table-column>
 
@@ -167,11 +168,11 @@
         </el-table-column>
         <el-table-column align="center" label="最后操作时间">
           <template slot-scope="scope">
-            {{scope.row.updateTime ? scope.row.updateTime.replace('T',' '):''}}
+            {{ scope.row.updateTime ? scope.row.updateTime.replace('T',' '):'' }}
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="操作">
+        <el-table-column v-if="role === 'ROLE_ADMIN'" align="center" label="操作">
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="update(scope.row.id)">编辑</el-button>
             <el-button type="danger" size="small" @click="deleteById(scope.row.id)">删除</el-button>
@@ -182,22 +183,22 @@
 
     <!--分页工具条-->
     <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
       :background="background"
       :current-page="currentPage"
       :page-sizes="[5, 10, 15, 20]"
       :page-size="5"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="totalCount">
-    </el-pagination>
+      :total="totalCount"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
 <script>
-import { page, add, update, deleteById, selectById } from "@/api/emp.js";
-import { findAll } from "@/api/dept.js";
-import { getToken } from "@/utils/auth";
+import { page, add, update, deleteById, selectById } from '@/api/emp.js'
+import { findAll } from '@/api/dept.js'
+import { getToken } from '@/utils/auth'
 import UploadExcel from '@/components/UploadExcel'
 import { importExcel } from '@/api/emp'
 
@@ -219,38 +220,38 @@ export default {
       dialogVisible: false,
       // 品牌模型数据
       searchEmp: {
-        name: "",
-        gender: "",
+        name: '',
+        gender: ''
       },
       emp: {
-        image: "",
-        username: "",
-        name: "",
-        phone: "",
-        email: "",
-        gender: "",
-        job: "",
-        entrydate: "",
-        deptId: ""
+        image: '',
+        username: '',
+        name: '',
+        phone: '',
+        email: '',
+        gender: '',
+        job: '',
+        entrydate: '',
+        deptId: ''
       },
       deptList: [],
-      genderList: [{id: 1,name: "男"},{id: 2,name: "女"}],
+      genderList: [{ id: 1, name: '男' }, { id: 2, name: '女' }],
       jobList: [
         {
           id: 1,
-          name: "班主任",
+          name: '班主任'
         },
         {
           id: 2,
-          name: "讲师",
+          name: '讲师'
         },
         {
           id: 3,
-          name: "学工主管",
+          name: '学工主管'
         },
         {
           id: 4,
-          name: "教研主管",
+          name: '教研主管'
         }
       ],
       // 表单验证规则
@@ -285,9 +286,9 @@ export default {
         ]
       },
 
-      beginTime: "",
-      endTime: "",
-      entrydate: "",
+      beginTime: '',
+      endTime: '',
+      entrydate: '',
 
       // 被选中的id数组
       selectedIds: [],
@@ -295,24 +296,43 @@ export default {
       multipleSelection: [],
       // 表格数据
       tableData: [],
-      token: {token: getToken()},
+      token: { token: getToken() },
       uploadUrl: process.env.VUE_APP_BASE_API + '/emps/import',
       // 上传参数
       upload: {
         open: false,
         title: '导入员工数据',
-        url: process.env.VUE_APP_BASE_API + "/emps/import",
-        headers: { Authorization: "Bearer " + getToken() },
+        url: process.env.VUE_APP_BASE_API + '/emps/import',
+        headers: { Authorization: 'Bearer ' + getToken() },
         isUploading: false
       },
-    };
+      role: ''
+    }
+  },
+
+  watch: {
+    entrydate(val) {
+      if (val && val.length >= 2) {
+        this.beginTime = val[0]
+        this.endTime = val[1]
+      } else {
+        this.beginTime = ''
+        this.endTime = ''
+      }
+    }
   },
 
   mounted() {
-    this.page(); //当页面加载完成后，发送异步请求，获取数据
+    this.page() // 当页面加载完成后，发送异步请求，获取数据
     findAll().then((result) => {
-      this.deptList = result.data.data;
-    });
+      this.deptList = result.data.data
+    })
+    // 读取本地角色
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (userInfo && userInfo.role) {
+      this.role = userInfo.role
+    }
+    console.log('当前角色:', this.role) // 调试用
   },
 
   methods: {
@@ -326,224 +346,210 @@ export default {
         this.currentPage,
         this.pageSize
       ).then((res) => {
-        this.totalCount = res.data.data.total;
-        this.tableData = res.data.data.records;
-      });
+        this.totalCount = res.data.data.total
+        this.tableData = res.data.data.records
+      })
     },
 
     // 复选框选中后执行的方法
     handleSelectionChange(val) {
-      this.multipleSelection = val;
+      this.multipleSelection = val
     },
 
     // 查询方法
     onSubmit() {
-      this.currentPage = 1;
-      this.page();
+      this.currentPage = 1
+      this.page()
     },
 
-    clear(){
-      this.searchEmp = {name: "", gender: ""};
-      this.beginTime = "",
-      this.endTime = "";
-      this.entrydate = "";
-      this.page();
+    clear() {
+      this.searchEmp = { name: '', gender: '' }
+      this.beginTime = '',
+      this.endTime = ''
+      this.entrydate = ''
+      this.page()
     },
     // 添加数据
     add() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          let operator;
+          let operator
           if (this.emp.id) {
-            //修改
-            operator = update(this.emp);
+            // 修改
+            operator = update(this.emp)
           } else {
-            operator = add(this.emp);
+            operator = add(this.emp)
           }
 
           operator.then((resp) => {
-            if (resp.data.code == "1") {
-              this.dialogVisible = false;
-              this.page();
-              this.$message({ message: "恭喜你，保存成功", type: "success" });
-              this.emp = { image: "" };
+            if (resp.data.code == '1') {
+              this.dialogVisible = false
+              this.page()
+              this.$message({ message: '恭喜你，保存成功', type: 'success' })
+              this.emp = { image: '' }
             } else {
-              this.$message.error(resp.data.msg);
+              this.$message.error(resp.data.msg)
             }
-          });
+          })
         } else {
-          this.$message.error('请填写完整的表单信息');
-          return false;
+          this.$message.error('请填写完整的表单信息')
+          return false
         }
-      });
+      })
     },
     update(id) {
-      //1. 打开窗口
-      this.dialogVisible = true;
-      //2. 发送请求
+      // 1. 打开窗口
+      this.dialogVisible = true
+      // 2. 发送请求
 
       selectById(id).then((result) => {
         if (result.data.code == 1) {
-          this.emp = result.data.data;
-          this.emp;
+          this.emp = result.data.data
+          this.emp
         }
-      });
+      })
     },
 
-
-    //分页
+    // 分页
     handleSizeChange(val) {
       // 重新设置每页显示的条数
-      this.pageSize = val;
-      this.page();
+      this.pageSize = val
+      this.page()
     },
 
     handleCurrentChange(val) {
       // 重新设置当前页码
-      this.currentPage = val;
-      this.page();
+      this.currentPage = val
+      this.page()
     },
 
-
-    //删除员工信息
-    deleteById(id){
-      this.$confirm("此操作将删除该数据, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+    // 删除员工信息
+    deleteById(id) {
+      this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
-          //2. 发送AJAX请求
-          deleteById(id).then((resp) => {
-            if (resp.data.code == 1) {
-              //删除成功
-              this.$message.success("恭喜你，删除成功");
-              this.page();
-            } else {
-              this.$message.error(resp.data.msg);
-            }
-          });
+        // 2. 发送AJAX请求
+        deleteById(id).then((resp) => {
+          if (resp.data.code == 1) {
+            // 删除成功
+            this.$message.success('恭喜你，删除成功')
+            this.page()
+          } else {
+            this.$message.error(resp.data.msg)
+          }
+        })
       }).catch(() => {
-          //用户点击取消按钮
-          this.$message.info("已取消删除");
-        });
+        // 用户点击取消按钮
+        this.$message.info('已取消删除')
+      })
     },
-
 
     // 批量删除员工信息
     deleteByIds() {
       // 弹出确认提示框
-      this.$confirm("此操作将删除该数据, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
-          //用户点击确认按钮
-          //1. 创建id数组, 从 this.multipleSelection 获取即可
-          for (let i = 0; i < this.multipleSelection.length; i++) {
-            this.selectedIds[i] = this.multipleSelection[i].id;
-          }
+        // 用户点击确认按钮
+        // 1. 创建id数组, 从 this.multipleSelection 获取即可
+        for (let i = 0; i < this.multipleSelection.length; i++) {
+          this.selectedIds[i] = this.multipleSelection[i].id
+        }
 
-          //2. 发送AJAX请求
-          deleteById(this.selectedIds).then((resp) => {
-            if (resp.data.code == "1") {
-              //删除成功
-              this.$message.success("恭喜你，删除成功");
-              this.page();
-            } else {
-              this.$message.error(resp.data.msg);
-            }
-          });
+        // 2. 发送AJAX请求
+        deleteById(this.selectedIds).then((resp) => {
+          if (resp.data.code == '1') {
+            // 删除成功
+            this.$message.success('恭喜你，删除成功')
+            this.page()
+          } else {
+            this.$message.error(resp.data.msg)
+          }
+        })
       }).catch(() => {
-          //用户点击取消按钮
-          this.$message.info("已取消删除");
-        });
+        // 用户点击取消按钮
+        this.$message.info('已取消删除')
+      })
     },
 
-
-    //文件上传相关
+    // 文件上传相关
     handleAvatarSuccess(res, file) {
-      this.emp.image = res.data;
+      this.emp.image = res.data
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$message.error('上传头像图片只能是 JPG 格式!')
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isJPG && isLt2M;
+      return isJPG && isLt2M
     },
     handleSuccess() {
       this.getList()
     },
     /** 导入按钮操作 */
     handleImport() {
-      this.upload.title = "导入员工数据";
-      this.upload.open = true;
+      this.upload.title = '导入员工数据'
+      this.upload.open = true
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.$confirm('是否确认导出所有员工数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('是否确认导出所有员工数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
-        this.exportLoading = true;
-        return exportExcel();
+        this.exportLoading = true
+        return exportExcel()
       }).then(response => {
         // 检查响应是否为blob类型
         if (response instanceof Blob) {
-          console.log(res);
-          const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-          const link = document.createElement('a');
-          link.href = window.URL.createObjectURL(blob);
-          link.download = '员工数据.xlsx';
-          link.click();
-          window.URL.revokeObjectURL(link.href);
-          this.$message.success('导出成功');
+          console.log(res)
+          const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+          const link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = '员工数据.xlsx'
+          link.click()
+          window.URL.revokeObjectURL(link.href)
+          this.$message.success('导出成功')
         } else {
-          this.$message.error('导出失败：返回数据格式不正确');
+          this.$message.error('导出失败：返回数据格式不正确')
         }
-        this.exportLoading = false;
+        this.exportLoading = false
       }).catch(error => {
-        console.error('导出失败:', error);
-        this.exportLoading = false;
-        this.$message.error('导出失败：' + (error.message || '未知错误'));
-      });
+        console.error('导出失败:', error)
+        this.exportLoading = false
+        this.$message.error('导出失败：' + (error.message || '未知错误'))
+      })
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
-      this.upload.isUploading = true;
+      this.upload.isUploading = true
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
-      this.upload.open = false;
-      this.upload.isUploading = false;
-      this.$refs.upload.clearFiles();
-      this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
-      this.getList();
+      this.upload.open = false
+      this.upload.isUploading = false
+      this.$refs.upload.clearFiles()
+      this.$alert(response.msg, '导入结果', { dangerouslyUseHTMLString: true })
+      this.getList()
     },
     // 提交上传文件
     submitFileForm() {
-      this.$refs.upload.submit();
-    }
-  },
-
-
-  watch: {
-    entrydate(val) {
-      if (val && val.length >= 2) {
-        this.beginTime = val[0];
-        this.endTime = val[1];
-      } else {
-        this.beginTime = "";
-        this.endTime = "";
-      }
+      this.$refs.upload.submit()
     },
-  },
-};
+    uploadExcelSubmit() {
+      // 占位方法，后续可实现具体逻辑
+    }
+  }
+}
 </script>
 <style>
 .avatar-uploader .el-upload {

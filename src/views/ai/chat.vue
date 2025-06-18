@@ -7,31 +7,31 @@
     </div>
 
     <!-- 聊天消息区域 -->
-    <div class="chat-messages" ref="messagesContainer">
+    <div ref="messagesContainer" class="chat-messages">
       <div
         v-for="(message, index) in messages"
         :key="index"
         :class="['message', message.type === 'user' ? 'user-message' : 'ai-message']"
       >
         <div class="message-avatar">
-          <i :class="message.type === 'user' ? 'el-icon-user' : 'el-icon-service'"></i>
+          <i :class="message.type === 'user' ? 'el-icon-user' : 'el-icon-service'" />
         </div>
         <div class="message-content">
-          <div class="message-text" v-html="formatMessage(message.content)"></div>
+          <div class="message-text" v-html="formatMessage(message.content)" />
           <div class="message-time">{{ formatTime(message.time) }}</div>
         </div>
       </div>
-      
+
       <!-- 加载状态 -->
       <div v-if="loading" class="message ai-message">
         <div class="message-avatar">
-          <i class="el-icon-service"></i>
+          <i class="el-icon-service" />
         </div>
         <div class="message-content">
           <div class="loading-dots">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span />
+            <span />
+            <span />
           </div>
         </div>
       </div>
@@ -45,15 +45,15 @@
           type="textarea"
           :rows="3"
           placeholder="请输入您的问题..."
-          @keydown.ctrl.enter="sendMessage"
           :disabled="loading"
+          @keydown.ctrl.enter="sendMessage"
         />
         <div class="input-actions">
           <el-button
             type="primary"
-            @click="sendMessage"
             :loading="loading"
             :disabled="!inputMessage.trim()"
+            @click="sendMessage"
           >
             发送
           </el-button>
@@ -335,17 +335,17 @@ export default {
   .chat-container {
     height: calc(100vh - 80px);
   }
-  
+
   .message-content {
     max-width: 85%;
   }
-  
+
   .chat-header {
     padding: 15px;
   }
-  
+
   .chat-header h2 {
     font-size: 20px;
   }
 }
-</style> 
+</style>

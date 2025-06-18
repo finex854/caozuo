@@ -1,9 +1,9 @@
 <template>
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
-      <router-link  key="collapse" class="sidebar-logo-link" to="/">
+      <router-link key="collapse" class="sidebar-logo-link" to="/">
         <img src="@/assets/logo/zfxlogo.png" class="sidebar-logo">
-        <h1  class="sidebar-title">{{ title }} </h1>
+        <h1 class="sidebar-title">{{ title }} </h1>
       </router-link>
 
     </transition>

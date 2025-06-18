@@ -74,7 +74,7 @@
     />
 
     <!-- 详情对话框 -->
-    <el-dialog title="操作日志详情" v-model="dialogVisible" width="800px">
+    <el-dialog v-model="dialogVisible" title="操作日志详情" width="800px">
       <el-descriptions :column="2" border>
         <el-descriptions-item label="用户名">{{ detail.username }}</el-descriptions-item>
         <el-descriptions-item label="资源路径">{{ detail.resourcePath }}</el-descriptions-item>
@@ -194,4 +194,4 @@ export default {
   white-space: pre-wrap;
   word-break: break-all;
 }
-</style> 
+</style>

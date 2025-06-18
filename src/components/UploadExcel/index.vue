@@ -1,11 +1,11 @@
 <template>
   <div class="upload-excel">
     <div class="btn-group">
-      <el-button type="primary" icon="el-icon-upload" @click="triggerUpload" :loading="loading">导入Excel</el-button>
+      <el-button type="primary" icon="el-icon-upload" :loading="loading" @click="triggerUpload">导入Excel</el-button>
       <el-button type="success" icon="el-icon-download" @click="handleExport">导出Excel</el-button>
     </div>
     <!-- 隐藏的文件上传input -->
-    <input ref="fileInput" type="file" accept=".xlsx,.xls" style="display: none" @change="handleFileChange"/>
+    <input ref="fileInput" type="file" accept=".xlsx,.xls" style="display: none" @change="handleFileChange">
     <!-- 导入结果弹窗 -->
     <el-dialog
       :title="importResult.title"
@@ -22,7 +22,7 @@
           :closable="false"
           show-icon
         />
-        
+
         <!-- 错误详情表格 -->
         <div v-if="importResult.errorCount > 0" class="error-details">
           <h4>错误详情：</h4>
@@ -31,7 +31,7 @@
             <el-table-column prop="field" label="字段" width="120" />
             <el-table-column prop="message" label="错误信息" />
           </el-table>
-          
+
           <!-- 错误文件下载 -->
           <div v-if="importResult.errorFile" class="error-file">
             <p>您可以下载错误数据文件查看详细信息：</p>
@@ -77,7 +77,7 @@ export default {
   methods: {
     triggerUpload() {
       this.$refs.fileInput.value = '' // 清除之前的选择
-      this.$refs.fileInput.click() //打开文件选择对话框
+      this.$refs.fileInput.click() // 打开文件选择对话框
     },
     handleFileChange(event) {
       // 文件选择变化处理
@@ -186,27 +186,27 @@ export default {
 <style lang="scss" scoped>
 .upload-excel {
   display: inline-block;
-  
+
   .btn-group {
     display: flex;
     gap: 10px;
   }
-  
+
   .import-result {
     .error-details {
       margin-top: 20px;
-      
+
       h4 {
         margin-bottom: 10px;
         color: #606266;
       }
-      
+
       .error-file {
         margin-top: 15px;
         padding: 10px;
         background-color: #f5f7fa;
         border-radius: 4px;
-        
+
         p {
           margin-bottom: 10px;
           color: #606266;

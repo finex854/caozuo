@@ -64,19 +64,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/system/user',
     name: 'System',
-    meta: { title: '系统管理', icon: 'el-icon-setting' },
+    meta: { title: '系统管理', icon: 'el-icon-setting', roles: ['ROLE_ADMIN', 'ROLE_EMP'] },
     children: [
       {
         path: 'dept',
         name: 'Dept',
         component: () => import('@/views/dept'),
-        meta: { title: '部门管理', icon: 'el-icon-menu' }
+        meta: { title: '部门管理', icon: 'el-icon-menu', roles: ['ROLE_ADMIN', 'ROLE_EMP'] }
       },
       {
         path: 'emp',
         name: 'Emp',
         component: () => import('@/views/emp'),
-        meta: { title: '员工管理', icon: 'el-icon-user-solid' }
+        meta: { title: '员工管理', icon: 'el-icon-user-solid', roles: ['ROLE_ADMIN', 'ROLE_EMP'] }
       }
     ]
   },
@@ -85,19 +85,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/report',
     name: 'Report',
-    meta: { title: '数据统计管理', icon: 'el-icon-s-tools' },
+    meta: { title: '数据统计管理', icon: 'el-icon-s-tools', roles: ['ROLE_ADMIN', 'ROLE_EMP'] },
     children: [
       {
         path: 'emp-report',
         name: 'emp-report',
         component: () => import('@/views/emp-report'),
-        meta: { title: '员工信息统计', icon: 'el-icon-s-data' }
+        meta: { title: '员工信息统计', icon: 'el-icon-s-data', roles: ['ROLE_ADMIN', 'ROLE_EMP'] }
       },
       {
         path: 'student-report',
         name: 'student-report',
         component: () => import('@/views/student-report'),
-        meta: { title: '学员信息统计', icon: 'el-icon-s-data' }
+        meta: { title: '学员信息统计', icon: 'el-icon-s-data', roles: ['ROLE_ADMIN', 'ROLE_EMP'] }
       }
     ]
   },
@@ -116,7 +116,7 @@ export const constantRoutes = [
       path: 'operation-log',
       name: 'OperationLog',
       component: () => import('@/views/operationLog/index'),
-      meta: { title: '操作日志', icon: 'el-icon-s-order' }
+      meta: { title: '操作日志', icon: 'el-icon-s-order', roles: ['ROLE_ADMIN'] }
     }]
   },
   {
@@ -151,7 +151,7 @@ router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('zcn_token')
   // 定义不需要登录就可以访问的路由
   const whiteList = ['/login', '/register/emp', '/register/student']
-  
+
   if (whiteList.includes(to.path)) {
     // 如果是访问白名单中的页面，直接放行
     next()

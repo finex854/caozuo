@@ -224,4 +224,4 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/styles/register.scss';
-</style> 
+</style>
