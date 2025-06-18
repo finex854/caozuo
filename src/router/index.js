@@ -119,6 +119,21 @@ export const constantRoutes = [
       meta: { title: '操作日志', icon: 'el-icon-s-order' }
     }]
   },
+  {
+    path: '/ai',
+    component: Layout,
+    redirect: '/ai/chat',
+    name: 'AI',
+    meta: { title: 'AI智能助手', icon: 'el-icon-service' },
+    children: [
+      {
+        path: 'chat',
+        name: 'AIChat',
+        component: () => import('@/views/ai/chat'),
+        meta: { title: 'AI聊天', icon: 'el-icon-chat-dot-round' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
