@@ -199,13 +199,19 @@ export default {
         email: [
           { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
         ]
-      }
+      },
+      role: ''
     }
   },
 
   created() {
     this.getClassesList()
     this.getList()
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (userInfo && userInfo.role) {
+      this.role = userInfo.role
+    }
+    console.log('当前角色:', this.role)
   },
 
   methods: {

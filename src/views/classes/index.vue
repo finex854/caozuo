@@ -134,13 +134,20 @@ export default {
         collegeName: '',
         majorName: '',
         clazzName: ''
-      }
+      },
+      role: '' // 新增role属性
     }
   },
 
   mounted() {
     // 当页面加载完成后自动执行。
     this.page()
+    // 读取本地角色
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo && userInfo.role) {
+      this.role = userInfo.role;
+    }
+    console.log('当前角色:', this.role); // 调试用
   },
 
   methods: {
