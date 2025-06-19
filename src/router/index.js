@@ -44,19 +44,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/example',
     name: 'Example',
-    meta: { title: '班级学员管理', icon: 'el-icon-s-help' },
+    meta: { title: '班级学员管理', icon: 'el-icon-s-help', roles: ['ROLE_ADMIN', 'ROLE_STUDENT'] },
     children: [
       {
         path: 'classes',
         name: 'Classes',
         component: () => import('@/views/classes'),
-        meta: { title: '班级管理', icon: 'el-icon-menu' }
+        meta: { title: '班级管理', icon: 'el-icon-menu', roles: ['ROLE_ADMIN', 'ROLE_STUDENT'] }
       },
       {
         path: 'student',
         name: 'Student',
         component: () => import('@/views/student'),
-        meta: { title: '学员管理', icon: 'el-icon-user-solid' }
+        meta: { title: '学员管理', icon: 'el-icon-user-solid', roles: ['ROLE_ADMIN', 'ROLE_STUDENT'] }
       }
     ]
   }, {
