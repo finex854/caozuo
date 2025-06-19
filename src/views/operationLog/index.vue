@@ -23,14 +23,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="操作时间">
-        <el-date-picker
-          v-model="dateRange"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="YYYY-MM-DD"
-        />
+        <el-date-picker v-model="dateRange" type="daterange" range-separator="至" start-placeholder="开始日期"
+          end-placeholder="结束日期" value-format="YYYY-MM-DD" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleQuery">查询</el-button>
@@ -62,16 +56,9 @@
     </el-table>
 
     <!-- 分页 -->
-    <el-pagination
-      v-show="total > 0"
-      :current-page="queryParams.pageNum"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="queryParams.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+    <el-pagination v-show="total > 0" :current-page="queryParams.pageNum" :page-sizes="[10, 20, 50, 100]"
+      :page-size="queryParams.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"
+      @size-change="handleSizeChange" @current-change="handleCurrentChange" />
 
     <!-- 详情对话框 -->
     <el-dialog v-model="dialogVisible" title="操作日志详情" width="800px">
@@ -145,15 +132,8 @@ export default {
       }
       console.log('查询参数:', params); // 调试用
       getOperationLogs(params).then(response => {
-        console.log('API响应:', response); // 调试用
-        if (response.data && response.data.code === 1) {
-          this.logList = response.data.data.records || []
-          this.total = response.data.data.total || 0
-        } else {
-          this.logList = []
-          this.total = 0
-          this.$message.error(response.data.msg || '获取数据失败')
-        }
+        this.logList = response.data.data.records
+        this.total = response.data.data.total
         this.loading = false
       }).catch(error => {
         console.error('查询失败:', error);
