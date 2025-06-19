@@ -200,7 +200,6 @@ import { page, add, update, deleteById, selectById } from '@/api/emp.js'
 import { findAll } from '@/api/dept.js'
 import { getToken } from '@/utils/auth'
 import UploadExcel from '@/components/UploadExcel'
-import { importExcel } from '@/api/emp'
 
 export default {
   name: 'Emp',
@@ -364,7 +363,7 @@ export default {
 
     clear() {
       this.searchEmp = { name: '', gender: '' }
-      this.beginTime = '',
+      this.beginTime = ''
       this.endTime = ''
       this.entrydate = ''
       this.page()

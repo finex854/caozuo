@@ -3,7 +3,7 @@
     <!-- 聊天头部 -->
     <div class="chat-header">
       <h2>AI智能助手</h2>
-      <p>企业智能组织管理系统客服</p>
+      <p>陈哥の手下</p>
     </div>
 
     <!-- 聊天消息区域 -->
@@ -78,7 +78,7 @@ export default {
   },
   mounted() {
     // 添加欢迎消息
-    this.addMessage('ai', '您好！我是企业智能组织管理系统的AI助手，可以帮助您了解系统的各个功能模块。请问有什么可以帮助您的吗？')
+    this.addMessage('ai', '您好！我是陈哥的AI助手，可以帮助您了解系统的各个功能模块。请问有什么可以帮助您的吗？')
   },
   methods: {
     // 发送消息
@@ -136,7 +136,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.messages = []
-        this.addMessage('ai', '您好！我是企业智能组织管理系统的AI助手，可以帮助您了解系统的各个功能模块。请问有什么可以帮助您的吗？')
+        this.addMessage('ai', '您好！我是陈哥的AI助手，可以帮助您了解系统的各个功能模块。请问有什么可以帮助您的吗？')
       })
     },
 

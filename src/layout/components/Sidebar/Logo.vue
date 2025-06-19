@@ -21,8 +21,8 @@ export default {
   },
   data() {
     return {
-      title: '企业智能组织管理系统',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      title: '陈哥の管理系统',
+      logo: 'A:/demo1/frontend/vue-admin-template/src/ssets/logo/zfxlogo.png'
     }
   }
 }

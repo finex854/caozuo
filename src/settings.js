@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '智行企业组织管理平台',
+  title: '陈哥の管理系统',
 
   /**
    * @type {boolean} true | false
