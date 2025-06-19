@@ -5,6 +5,7 @@ export function chatWithAI(message) {
   return request({
     url: '/ai/chat',
     method: 'post',
-    data: message
+    data: message,
+    timeout: 60000
   })
 } 

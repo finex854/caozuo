@@ -145,7 +145,7 @@ export default {
       }
       getOperationLogs(params).then(response => {
         this.logList = response.data.data.records
-        this.total = response.data.total
+        this.total = response.data.data.total
         this.loading = false
       })
     },
