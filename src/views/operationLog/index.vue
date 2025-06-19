@@ -143,10 +143,24 @@ export default {
         startTime: this.dateRange[0],
         endTime: this.dateRange[1]
       }
+      console.log('查询参数:', params); // 调试用
       getOperationLogs(params).then(response => {
-        this.logList = response.data.data.records
-        this.total = response.data.total
+        console.log('API响应:', response); // 调试用
+        if (response.data && response.data.code === 1) {
+          this.logList = response.data.data.records || []
+          this.total = response.data.data.total || 0
+        } else {
+          this.logList = []
+          this.total = 0
+          this.$message.error(response.data.msg || '获取数据失败')
+        }
         this.loading = false
+      }).catch(error => {
+        console.error('查询失败:', error);
+        this.logList = []
+        this.total = 0
+        this.loading = false
+        this.$message.error('查询失败，请重试')
       })
     },
     // 查询按钮操作
