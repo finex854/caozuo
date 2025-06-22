@@ -40,6 +40,18 @@ export const constantRoutes = [
   },
 
   {
+    path: '/profile',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: '',
+      name: 'Profile',
+      component: () => import('@/views/profile/index'),
+      meta: { title: '个人信息' }
+    }]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example',
@@ -77,6 +89,12 @@ export const constantRoutes = [
         name: 'Emp',
         component: () => import('@/views/emp'),
         meta: { title: '员工管理', icon: 'el-icon-user-solid', roles: ['ROLE_ADMIN', 'ROLE_EMP'] }
+      },
+      {
+        path: 'user',
+        name: 'User',
+        component: () => import('@/views/user'),
+        meta: { title: '用户管理', icon: 'el-icon-user', roles: ['ROLE_ADMIN'] }
       }
     ]
   },
@@ -102,17 +120,36 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/notice',
+    component: Layout,
+    redirect: '/notice',
+    meta: { title: '公告', icon: 'el-icon-s-promotion' },
+    children: [{
+      path: 'notice-list',
+      name: 'NoticeList',
+      component: () => import('@/views/notice/notice-list'),
+      meta: { title: '公告列表', icon: 'el-icon-more', roles: ['ROLE_ADMIN', 'ROLE_EMP', 'ROLE_STUDENT'] }
+    },
+    {
+      path: 'notice-editor',
+      name: 'NoticeEditor',
+      component: () => import('@/views/notice/notice-editor'),
+      meta: { title: '公告管理', icon: 'el-icon-edit-outline', roles: ['ROLE_ADMIN', 'ROLE_EMP', 'ROLE_STUDENT'] }
+    },
+    {
+      path: 'notice-editor/:id',
+      name: 'NoticeEditorEdit',
+      component: () => import('@/views/notice/notice-editor'),
+      meta: { title: '编辑公告', icon: 'el-icon-edit-outline', roles: ['ROLE_ADMIN', 'ROLE_EMP', 'ROLE_STUDENT'] },
+      hidden: true
+    }]
+  },
+  {
     path: '/message',
     component: Layout,
     redirect: '/message',
-    meta: { title: '通知', icon: 'el-icon-s-comment' },
+    meta: { title: '日志', icon: 'el-icon-s-comment' },
     children: [{
-      path: 'message',
-      name: 'message',
-      component: () => import('@/views/message'),
-      meta: { title: '通知', icon: 'el-icon-s-comment' }
-    },
-    {
       path: 'operation-log',
       name: 'OperationLog',
       component: () => import('@/views/operationLog/index'),
@@ -134,6 +171,7 @@ export const constantRoutes = [
       }
     ]
   },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

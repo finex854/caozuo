@@ -117,7 +117,9 @@ export default {
               // 存储role和token到localStorage
               localStorage.setItem('userInfo', JSON.stringify({
                 role: res.data.role,
-                token: res.data.token
+                token: res.data.token,
+                username: res.data.username,
+                avatar: res.data.avatar
               }))
               this.$message.success('登录成功')
               this.$router.push({ path: this.redirect || '/' })

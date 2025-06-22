@@ -6,6 +6,20 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    if(!this.$store.state.isConnected){
+      this.connectToStore();
+    }
+  },
+  methods: {
+      connectToStore() {
+        this.$store.dispatch('connect')
+      }
+  },
+  destroyed() {
+    this.$store.dispatch('disconnect')
+  }
 }
 </script>
+
