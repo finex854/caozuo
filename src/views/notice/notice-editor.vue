@@ -12,6 +12,7 @@
         
         <el-form-item label="公告内容" prop="content">
           <editor
+            
             api-key="06mvz3fk068v9pqcf2huqlryhpriwznx5zxe9e2q9s57mu9e"
             v-model="articleForm.content"
             :init="{
