@@ -70,4 +70,4 @@ export function getPageByClassId(classId, pageNum, pageSize) {
     url: `/students/class/${classId}/page?pageNum=${pageNum}&pageSize=${pageSize}`,
     method: 'get'
   })
-} 
+}
